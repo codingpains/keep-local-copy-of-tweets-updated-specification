@@ -168,7 +168,7 @@ Adds a job to the queue after the delay sent in milliseconds.
 #### JobQueue.get(namespace)
 Gets a job from a namespace.
 
-** Input **:
+**Input**:
 
 * __namespace__ [String]: Namespace or category of the job, this string will be used to pull request jobs.
 * __data__ [String]: JSON String with the data that will be used as input the worker processing this job.
@@ -183,7 +183,7 @@ We suggest creating a wrapper (an Abstract Data Type) with set of functions to g
 
 Given the age of a tweet this function determines how long to wait before the next update for this tweet.
 
-** Data **:
+**Data**:
 
 ```
   conf->tweetAge[18m]
@@ -195,11 +195,11 @@ Given the age of a tweet this function determines how long to wait before the ne
 
 Each key in tweetAge holds the interval of update when a tweet is younger than the time specified by the key.
 
-** Input **:
+**Input**:
 
  * __birthdate__ [Number]: The time in milliseconds that a tweet has lived.
  
-** Output **:
+**Output**:
 
  * __delay__ [Number]: The time in milliseconds to wait before updating this tweet. If -1 is returned it means you should not update this tweet.
  
@@ -228,11 +228,11 @@ There is a part of this process that we need to control, at the end we will add 
 
 Given a tweet it enqueues it for the next update with the correct delay.
 
-** Input **:
+**Input**:
 
 * __tweet__ [Object]: Instance of tweet.
 
-** Algorithm **:
+**Algorithm**:
 
 1. Let __t__ be an instance of a tweet.
 2. __t__ must have an attribute id that holds the value of the `id_str` attribtue that Twitter sends with each tweet.
@@ -261,7 +261,7 @@ The worker handles its internal state and most of its funcitons rely on such sta
 
 Starts the process. Recursive funciton, everytime it ends its flow it will call itself to start again. No arguments.
 
-** Algorithm **:
+**Algorithm**:
 
 1. Call `shouldStartTimer()`.
 2. If response of `shouldStartTimer` is true then call `startTimer()`
@@ -280,7 +280,7 @@ Starts the process. Recursive funciton, everytime it ends its flow it will call 
 
 Reads the tweets buffer and determines if the __startTime__ should be set.
 
-** Algorithm **:
+**Algorithm**:
 
 1. If buffer length is 0 return true.
 2. Else return 1.
@@ -288,11 +288,15 @@ Reads the tweets buffer and determines if the __startTime__ should be set.
 
 ### startTimer()
 
+**Algorithm**:
+
 Set __startTime__ to current date.
 
 ### getTweetToUpdate()
 
 Grabs a tweet from the Job queue.
+
+**Algorithm**:
 
 1. Call `JobQueue.get()`
 2. Let __data__ be the job data from the previous call.
@@ -303,12 +307,16 @@ Grabs a tweet from the Job queue.
 
 Adds a tweet to the __buffer__.
 
+**Algorithm**:
+
 1. Get the __t__ tweet id.
 2. Push __id__ to __buffer__.
 
 ### shouldUpdate(t)
 
 Validates if the __buffer__ is full or if the __bufferTTL__ is depleated.
+
+**Algorithm**:
 
 1. If __buffer__ length is greater or equal to 100.
 2. Return true
@@ -321,6 +329,8 @@ Validates if the __buffer__ is full or if the __bufferTTL__ is depleated.
 
 Grabs ids from the __buffer__ and uses them to request information from using the Twitter's `statuses/lookup` REST API path.
 
+**Algorithm**:
+
 1. Let __query__ be the query parameter for the request.
 2. Add an attribute `id` to __query__ using the joined values from __buffer__ separated by commas.
 3. Send request to `statuses/lookup` with the __query__ parameter.
@@ -331,6 +341,8 @@ Grabs ids from the __buffer__ and uses them to request information from using th
 ### saveTweets(tweets)
 
 Gets the response from Twitter as input and stores them in your system.
+
+**Algorithm**:
 
 1. Let __tweets__ be an array of raw tweet objects, as Twitter sends them.
 2. For each tweet.
@@ -343,6 +355,8 @@ Gets the response from Twitter as input and stores them in your system.
 
 Sends the already updated tweets to the next step of the pipeline.
 
+**Algorithm**:
+
 1. Let __tweets__ be a collection of raw tweet objects.
 2. For each tweet.
 3. Call `Config.getTweetUpdateDelay(tweet.created_at)`.
@@ -353,4 +367,5 @@ Sends the already updated tweets to the next step of the pipeline.
 
 Flushes the tweets buffer.
 
+**Algorithm**:
 1. __buffer__ = new Array.
