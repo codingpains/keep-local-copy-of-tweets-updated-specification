@@ -368,4 +368,5 @@ Sends the already updated tweets to the next step of the pipeline.
 Flushes the tweets buffer.
 
 **Algorithm**:
+
 1. __buffer__ = new Array.
